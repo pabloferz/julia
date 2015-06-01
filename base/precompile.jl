@@ -488,6 +488,15 @@ precompile(Base.string, (ASCIIString, UTF8String, Char))
 precompile(Base.string, (ASCIIString, ASCIIString, Int))
 precompile(Base.vect, (Base.LineEdit.Prompt, ASCIIString))
 
+# speeding up addprocs, adding functions called by workers on startup
+precompile(Base.start_worker, (Base.IO,))
+precompile(Base.process_messages, (Base.AsyncStream, Base.AsyncStream))
+precompile(Base.create_message_handler_loop, (Base.AsyncStream, Base.AsyncStream))
+precompile(Base.connect_to_peer, (Base.ClusterManager, Int, Base.WorkerConfig))
+precompile(Base.connect, (Base.ClusterManager, Int, Base.WorkerConfig))
+precompile(Base.connect_w2w, (Int, Base.WorkerConfig))
+precompile(Base.connect_to_worker, (AbstractString, Int))
+
 # Speed up repl help
 if Base.USE_GPL_LIBS
     sprint(Markdown.term, @doc fft)
