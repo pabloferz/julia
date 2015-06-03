@@ -223,12 +223,19 @@ if Bool(parse(Int,(get(ENV, "JULIA_TESTFULL", "0"))))
 
     # retry, on error exit
     res = pmap(x->(x=='a') ? error("EXPECTED TEST ERROR. TO BE IGNORED.") : uppercase(x), s; err_retry=true, err_stop=true);
-    @test length(res) < length(ups)
+    if length(res) == length(ups)
+        # Under normal circumstances since the first task fails, and err_stop == true, the number of completed tasks must be less
+        # than the number of submitted tasks. Sometimes, if the exception propagated from the failed task is slow, all tasks
+        # may complete before pmap stops.
+        println("WARNING! Very slow propagation of an expected error!")
+    end
     @test isa(res[1], Exception)
 
     # no retry, on error exit
     res = pmap(x->(x=='a') ? error("EXPECTED TEST ERROR. TO BE IGNORED.") : uppercase(x), s; err_retry=false, err_stop=true);
-    @test length(res) < length(ups)
+    if length(res) == length(ups)
+        println("WARNING! Very slow propagation of an expected error!")
+    end
     @test isa(res[1], Exception)
 
     # retry, on error continue
