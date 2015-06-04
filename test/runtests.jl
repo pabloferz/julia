@@ -5,7 +5,7 @@ tests, net_on = choosetests(ARGS)
 cd(dirname(@__FILE__)) do
     n = 1
     if net_on
-        n = min(4, CPU_CORES, length(tests))
+        n = min(2, CPU_CORES, length(tests))
         n > 1 && addprocs(n; exeflags=`--check-bounds=yes`)
         blas_set_num_threads(1)
     end
