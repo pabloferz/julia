@@ -107,4 +107,5 @@ immutable Nullable{T}
 
     Nullable() = new(true)
     Nullable(value::T) = new(false, value)
+    Nullable(isnull::Bool, value::T) = new(isnull, value)
 end
